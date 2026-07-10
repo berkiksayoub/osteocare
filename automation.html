@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FFFFFF">
+<title>OstéoCare — Automatisation Marketing</title>
+<meta name="description" content="Constructeur de workflows d'automatisation marketing pour le cabinet OstéoCare : campagnes, rappels, réactivation patients.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg-2: #F5F7FA;
+  --bg-3: #EEEFFD;
+  --canvas-bg: #F8F9FC;
+  --accent: #2F80ED;
+  --accent-2: #4A90E2;
+  --accent-deep: #1A5AAE;
+  --accent-soft: rgba(47, 128, 237, 0.08);
+  --accent-tint: rgba(47, 128, 237, 0.15);
+  --text: #1A2540;
+  --text-dim: #5C6B85;
+  --text-faint: #8A96AC;
+  --border: #E5E9F0;
+  --border-strong: #C9D2E0;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --purple: #7C3AED;
+  --pink: #EC4899;
+  --teal: #14B8A6;
+
+  --node-trigger: #10B981;
+  --node-action: #2F80ED;
+  --node-logic: #F59E0B;
+  --node-integration: #7C3AED;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Manrope', 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* --- HEADER --- */
+.site-header {
+  height: 60px;
+  padding: 0 24px;
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+  z-index: 100;
+}
+.header-left {
+  display: flex; align-items: center; gap: 24px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.brand-logo {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  border-radius: 8px;
+  display: grid; place-items: center;
+  color: #FFF; font-weight: 800; font-size: 14px;
+  font-family: 'Manrope', sans-serif;
+}
+.brand-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.brand-name span { color: var(--accent); }
+.header-divider {
+  width: 1px; height: 24px; background: var(--border);
+}
+.workflow-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.92rem; font-weight: 600;
+}
+.workflow-title input {
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 6px;
+  min-width: 220px;
+  transition: background 0.15s;
+}
+.workflow-title input:hover { background: var(--bg-2); }
+.workflow-title input:focus {
+  outline: none;
+  background: var(--bg-2);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+.status-pill {
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: var(--bg-2);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.status-pill.active {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.header-right {
+  display: flex; align-items: center; gap: 10px;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  background: #FFFFFF;
+  color: var(--text);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+}
+.btn.primary:hover {
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(47, 128, 237, 0.3);
+}
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover { background: var(--bg-2); border-color: transparent; color: var(--text); }
+.btn.danger { color: var(--danger); border-color: var(--border); }
+.btn.danger:hover { background: rgba(239, 68, 68, 0.08); color: var(--danger); border-color: var(--danger); }
+.btn svg { width: 15px; height: 15px; }
+
+/* --- APP LAYOUT --- */
+.app {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+/* --- SIDEBAR PALETTE --- */
+.sidebar {
+  background: #FFFFFF;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+}
+.sidebar-tab {
+  flex: 1;
+  padding: 12px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.sidebar-tab:hover { color: var(--text); }
+.sidebar-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.sidebar-search {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.85rem;
+  background: var(--bg-2);
+  transition: all 0.15s;
+}
+.sidebar-search input:focus {
+  outline: none;
+  background: #FFF;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px;
+}
+.category-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 12px 12px 6px;
+}
+.palette-node {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  margin: 2px 0;
+  border-radius: 8px;
+  cursor: grab;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  user-select: none;
+}
+.palette-node:hover {
+  background: var(--bg-2);
+  border-color: var(--border);
+  transform: translateX(2px);
+}
+.palette-node:active { cursor: grabbing; }
+.palette-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+.palette-icon svg { width: 18px; height: 18px; }
+.palette-icon.trigger { background: var(--node-trigger); }
+.palette-icon.action { background: var(--node-action); }
+.palette-icon.logic { background: var(--node-logic); }
+.palette-icon.integration { background: var(--node-integration); }
+.palette-label {
+  flex: 1;
+  min-width: 0;
+}
+.palette-name {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.palette-desc {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- TEMPLATES PANEL --- */
+.template-card {
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #FFF;
+}
+.template-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(47, 128, 237, 0.08);
+  transform: translateY(-1px);
+}
+.template-card h4 {
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+}
+.template-card p {
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.template-tags {
+  display: flex; gap: 4px; flex-wrap: wrap;
+}
+.template-tag {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+/* --- CANVAS --- */
+.canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--canvas-bg);
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  overflow: hidden;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(26, 37, 64, 0.12) 1px, transparent 0);
+  background-size: 22px 22px;
+  background-position: 0 0;
+}
+.canvas.panning { cursor: grabbing; }
+.canvas-inner {
+  position: absolute;
+  top: 0; left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.canvas-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 6000px;
+  height: 4000px;
+  pointer-events: none;
+  overflow: visible;
+}
+.canvas-svg .conn {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  transition: stroke 0.15s;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+.canvas-svg .conn:hover, .canvas-svg .conn.selected {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+.canvas-svg .conn-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 14;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+.canvas-svg .ghost {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  opacity: 0.7;
+}
+
+/* --- NODES ON CANVAS --- */
+.node {
+  position: absolute;
+  width: 240px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 2px 6px rgba(26, 37, 64, 0.04), 0 8px 24px rgba(26, 37, 64, 0.05);
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.05s;
+  cursor: grab;
+  user-select: none;
+}
+.node:hover {
+  box-shadow: 0 4px 12px rgba(26, 37, 64, 0.08), 0 12px 32px rgba(26, 37, 64, 0.08);
+}
+.node.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-tint), 0 8px 24px rgba(47, 128, 237, 0.15);
+}
+.node.dragging { cursor: grabbing; }
+.node.running {
+  border-color: var(--warning);
+  animation: pulse 0.9s ease infinite;
+}
+.node.completed {
+  border-color: var(--success);
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4), 0 8px 24px rgba(26, 37, 64, 0.08); }
+  50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0), 0 8px 24px rgba(26, 37, 64, 0.08); }
+}
+.node-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.node-icon {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  display: grid; place-items: center;
+  color: #FFF;
+  flex-shrink: 0;
+}
+.node-icon svg { width: 16px; height: 16px; }
+.node-icon.trigger { background: var(--node-trigger); }
+.node-icon.action { background: var(--node-action); }
+.node-icon.logic { background: var(--node-logic); }
+.node-icon.integration { background: var(--node-integration); }
+.node-title {
+  flex: 1;
+  min-width: 0;
+}
+.node-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.node-type {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.node-body {
+  padding: 10px 14px 12px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  min-height: 24px;
+}
+.node-body-empty {
+  font-style: italic;
+  color: var(--text-faint);
+  font-size: 0.76rem;
+}
+.node-body-line {
+  display: flex; justify-content: space-between; gap: 8px;
+  padding: 2px 0;
+}
+.node-body-line span:first-child {
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.node-body-line span:last-child {
+  color: var(--text);
+  font-weight: 500;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60%;
+}
+.port {
+  position: absolute;
+  width: 14px; height: 14px;
+  background: #FFFFFF;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: crosshair;
+  transition: all 0.15s;
+  z-index: 2;
+}
+.port:hover, .port.connecting {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-50%) scale(1.35);
+  box-shadow: 0 0 0 4px var(--accent-tint);
+}
+.port.in { left: -8px; }
+.port.out { right: -8px; }
+.port.branch-true { border-color: var(--success); }
+.port.branch-true:hover { background: var(--success); box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
+.port.branch-false { border-color: var(--danger); }
+.port.branch-false:hover { background: var(--danger); box-shadow: 0 0 0 4px rgba(239,68,68,0.15); }
+.port-label {
+  position: absolute;
+  right: 16px;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+
+.node-delete {
+  position: absolute;
+  top: -10px; right: -10px;
+  width: 24px; height: 24px;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  display: none;
+  align-items: center; justify-content: center;
+  color: var(--danger);
+  cursor: pointer;
+  transition: all 0.15s;
+  z-index: 3;
+}
+.node-delete:hover {
+  background: var(--danger);
+  color: #FFF;
+  border-color: var(--danger);
+  transform: scale(1.1);
+}
+.node.selected .node-delete { display: flex; }
+
+/* --- CANVAS OVERLAY UI --- */
+.canvas-toolbar {
+  position: absolute;
+  bottom: 20px; left: 20px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  box-shadow: 0 4px 12px rgba(26, 37, 64, 0.08);
+  z-index: 5;
+}
+.canvas-toolbar button {
+  width: 34px; height: 34px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-dim);
+  display: grid; place-items: center;
+  transition: all 0.15s;
+}
+.canvas-toolbar button:hover {
+  background: var(--bg-2);
+  color: var(--text);
+}
+.canvas-toolbar button svg { width: 16px; height: 16px; }
+.zoom-level {
+  padding: 0 12px;
+  height: 34px;
+  display: grid; place-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  min-width: 54px;
+}
+.canvas-toolbar .sep {
+  width: 1px;
+  background: var(--border);
+  margin: 6px 4px;
+}
+
+.canvas-hint {
+  position: absolute;
+  bottom: 20px; right: 20px;
+  padding: 8px 14px;
+  background: rgba(26, 37, 64, 0.85);
+  color: #FFF;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  z-index: 5;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+.canvas-hint kbd {
+  background: rgba(255,255,255,0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  margin: 0 2px;
+}
+.canvas-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  color: var(--text-faint);
+  pointer-events: none;
+  z-index: 1;
+}
+.canvas-empty h3 {
+  font-size: 1.15rem;
+  color: var(--text-dim);
+  font-weight: 700;
+}
+.canvas-empty p { font-size: 0.88rem; max-width: 320px; }
+.canvas-empty svg { width: 56px; height: 56px; opacity: 0.5; margin-bottom: 8px; }
+
+/* --- INSPECTOR PANEL (RIGHT) --- */
+.inspector {
+  background: #FFFFFF;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.inspector-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.inspector-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  color: #FFF;
+}
+.inspector-icon svg { width: 18px; height: 18px; }
+.inspector-title {
+  flex: 1;
+  min-width: 0;
+}
+.inspector-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+}
+.inspector-cat {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.inspector-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.inspector-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-faint);
+}
+.inspector-empty svg { width: 48px; height: 48px; opacity: 0.4; margin-bottom: 16px; }
+.inspector-empty h4 { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 6px; }
+.inspector-empty p { font-size: 0.82rem; }
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #FFF;
+  font: inherit;
+  font-size: 0.86rem;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.field textarea {
+  min-height: 90px;
+  resize: vertical;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+}
+.field textarea.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--bg-2);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.field-hint {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.merge-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+  margin: 2px;
+  border: 1px solid var(--accent-tint);
+  transition: all 0.15s;
+}
+.merge-tag:hover {
+  background: var(--accent);
+  color: #FFF;
+}
+.merge-tags-wrap {
+  padding: 10px;
+  background: var(--bg-2);
+  border-radius: 8px;
+  margin-top: 6px;
+}
+.merge-tags-title {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* --- MODAL --- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 37, 64, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: #FFF;
+  border-radius: 16px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 { font-size: 1.05rem; }
+.modal-close {
+  background: none; border: none;
+  color: var(--text-dim);
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  transition: all 0.15s;
+}
+.modal-close:hover { background: var(--bg-2); color: var(--text); }
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.modal-body pre {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  overflow-x: auto;
+  color: var(--text);
+  margin: 12px 0;
+}
+
+/* --- EXECUTION LOG --- */
+.log-panel {
+  position: absolute;
+  top: 20px; left: 50%;
+  transform: translateX(-50%);
+  min-width: 380px;
+  max-width: 520px;
+  background: #FFF;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(26, 37, 64, 0.15);
+  z-index: 20;
+  overflow: hidden;
+  display: none;
+}
+.log-panel.open { display: block; }
+.log-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-2);
+}
+.log-header h4 { font-size: 0.85rem; }
+.log-body {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.log-line {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--bg-2);
+}
+.log-line:last-child { border-bottom: none; }
+.log-time {
+  color: var(--text-faint);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.log-icon { flex-shrink: 0; padding-top: 1px; }
+.log-icon svg { width: 14px; height: 14px; }
+.log-icon.info { color: var(--accent); }
+.log-icon.success { color: var(--success); }
+.log-icon.warning { color: var(--warning); }
+.log-icon.error { color: var(--danger); }
+.log-text { flex: 1; color: var(--text); word-break: break-word; }
+
+/* --- TOAST --- */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--text);
+  color: #FFF;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; align-items: center; gap: 10px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast svg { width: 18px; height: 18px; color: var(--success); }
+.toast.error svg { color: var(--danger); }
+
+/* --- Scrollbars --- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); background-clip: padding-box; border: 2px solid transparent; }
+
+/* --- Responsive --- */
+@media (max-width: 1200px) {
+  .app { grid-template-columns: 240px 1fr 300px; }
+}
+@media (max-width: 960px) {
+  .app { grid-template-columns: 60px 1fr; }
+  .inspector { display: none; }
+  .sidebar-tabs, .sidebar-search { display: none; }
+  .sidebar-content { padding: 8px 4px; }
+  .palette-node { justify-content: center; padding: 8px 4px; }
+  .palette-label, .category-title { display: none; }
+  .workflow-title input { min-width: 120px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-left">
+    <a href="index.html" class="brand">
+      <div class="brand-logo">O</div>
+      <div class="brand-name">Ostéo<span>Care</span></div>
+    </a>
+    <div class="header-divider"></div>
+    <div class="workflow-title">
+      <input id="workflow-name" value="Nouveau workflow" spellcheck="false" />
+      <span class="status-pill" id="status-pill">Inactif</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn ghost" id="btn-templates">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Templates
+    </button>
+    <button class="btn ghost" id="btn-clear">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+      Vider
+    </button>
+    <button class="btn" id="btn-save">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Sauvegarder
+    </button>
+    <button class="btn primary" id="btn-run">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Exécuter
+    </button>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" data-tab="nodes">Nœuds</button>
+      <button class="sidebar-tab" data-tab="templates">Templates</button>
+    </div>
+    <div class="sidebar-search" id="search-wrap">
+      <input id="palette-search" placeholder="Rechercher un nœud…" />
+    </div>
+    <div class="sidebar-content" id="palette-content"></div>
+    <div class="sidebar-content" id="templates-content" style="display:none"></div>
+  </aside>
+
+  <!-- CANVAS -->
+  <main class="canvas-wrap">
+    <div class="canvas" id="canvas">
+      <div class="canvas-inner" id="canvas-inner">
+        <svg class="canvas-svg" id="canvas-svg">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border-strong)"/>
+            </marker>
+            <marker id="arrow-active" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#2F80ED"/>
+            </marker>
+          </defs>
+          <g id="connections-layer"></g>
+          <g id="ghost-layer"></g>
+        </svg>
+        <div id="nodes-layer"></div>
+      </div>
+      <div class="canvas-empty" id="canvas-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 6h6a3 3 0 0 1 3 3v6"/></svg>
+        <h3>Toile vide</h3>
+        <p>Glissez un nœud depuis le panneau de gauche ou chargez un template pour commencer.</p>
+      </div>
+    </div>
+
+    <div class="canvas-toolbar">
+      <button id="btn-zoom-out" title="Zoom arrière">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <div class="zoom-level" id="zoom-level">100%</div>
+      <button id="btn-zoom-in" title="Zoom avant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>
+      </button>
+      <div class="sep"></div>
+      <button id="btn-fit" title="Ajuster à la vue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/></svg>
+      </button>
+      <button id="btn-reset" title="Réinitialiser la vue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      </button>
+    </div>
+
+    <div class="canvas-hint">
+      <kbd>Espace</kbd> + glisser pour déplacer • <kbd>Molette</kbd> pour zoomer • <kbd>Suppr</kbd> pour supprimer
+    </div>
+
+    <div class="log-panel" id="log-panel">
+      <div class="log-header">
+        <h4>Journal d'exécution</h4>
+        <button class="modal-close" id="log-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="log-body" id="log-body"></div>
+    </div>
+  </main>
+
+  <!-- RIGHT INSPECTOR -->
+  <aside class="inspector" id="inspector">
+    <div class="inspector-empty" id="inspector-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 9h6v6H9z"/></svg>
+      <h4>Aucun nœud sélectionné</h4>
+      <p>Cliquez sur un nœud du canvas pour l'éditer.</p>
+    </div>
+    <div id="inspector-content" style="display:none; height: 100%; flex-direction: column;">
+      <div class="inspector-header">
+        <div class="inspector-icon" id="inspector-icon"></div>
+        <div class="inspector-title">
+          <div class="inspector-name" id="inspector-name">—</div>
+          <div class="inspector-cat" id="inspector-cat">—</div>
+        </div>
+      </div>
+      <div class="inspector-body" id="inspector-body"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Titre</h3>
+      <button class="modal-close" id="modal-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toast-text">Message</span>
+</div>
+
+<script>
+/* ============================================================
+   ICON LIBRARY (small inline SVG strings)
+============================================================ */
+const ICONS = {
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  form: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  cake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3M12 8v3M17 8v3"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  webhook: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="M6 17l3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="M12 6.03c.66 0 1.32.15 1.92.44 1.55.76 2.16 2.6 1.42 4.16"/></svg>',
+  noshow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  email: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+  sms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/></svg>',
+  tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+  slack: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="2" width="3" height="8" rx="1.5"/><rect x="8" y="14" width="3" height="8" rx="1.5"/><rect x="14" y="13" width="8" height="3" rx="1.5"/><rect x="2" y="8" width="8" height="3" rx="1.5"/></svg>',
+  crm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>',
+  task: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+  audience: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="3"/><path d="M21 21v-2a3 3 0 0 0-2-2.83"/></svg>',
+  wait: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>',
+  branch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>',
+  filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+  split: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg>',
+  webhook_out: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-4"/><polyline points="8 7 12 3 16 7"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  ai: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v1H7a3 3 0 0 0 0 6h1v1a3 3 0 0 0 6 0v-1h1a3 3 0 0 0 0-6h-1V5a3 3 0 0 0-3-3z"/><path d="M9 18v3M15 18v3M12 21h.01"/></svg>',
+};
+
+/* ============================================================
+   NODE DEFINITIONS
+============================================================ */
+const NODE_DEFS = {
+  // ─── TRIGGERS ───
+  trigger_appointment_booked: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'calendar',
+    name: 'RDV réservé',
+    desc: 'Un patient prend rendez-vous en ligne',
+    inputs: 0, outputs: 1,
+    fields: [
+      { key: 'type', label: 'Type de RDV', type: 'select', options: ['Tout type','Première consultation','Suivi','Urgence'], default: 'Tout type' },
+    ],
+    preview: n => ({ 'Type': n.data.type || 'Tout type' })
+  },
+  trigger_appointment_completed: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'user',
+    name: 'RDV terminé',
+    desc: 'Après une consultation effectuée',
+    inputs: 0, outputs: 1,
+    fields: [
+      { key: 'delay_minutes', label: 'Attendre après le RDV (min)', type: 'number', default: 30 },
+    ],
+    preview: n => ({ 'Délai': `+${n.data.delay_minutes || 30} min` })
+  },
+  trigger_no_show: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'noshow',
+    name: 'Patient absent',
+    desc: 'RDV manqué sans annulation',
+    inputs: 0, outputs: 1,
+    fields: [],
+    preview: () => ({ 'Événement': 'Absence' })
+  },
+  trigger_form_submit: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'form',
+    name: 'Formulaire soumis',
+    desc: 'Contact ou demande d\'info',
+    inputs: 0, outputs: 1,
+    fields: [
+      { key: 'form_id', label: 'Formulaire', type: 'select', options: ['Contact général','Demande de RDV','Avis patient','Newsletter'], default: 'Contact général' },
+    ],
+    preview: n => ({ 'Source': n.data.form_id || 'Contact général' })
+  },
+  trigger_birthday: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'cake',
+    name: 'Anniversaire',
+    desc: 'Le jour de l\'anniversaire du patient',
+    inputs: 0, outputs: 1,
+    fields: [
+      { key: 'send_time', label: 'Heure d\'envoi', type: 'time', default: '09:00' },
+    ],
+    preview: n => ({ 'À': n.data.send_time || '09:00' })
+  },
+  trigger_schedule: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'clock',
+    name: 'Planifié (Cron)',
+    desc: 'Exécution récurrente',
+    inputs: 0, outputs: 1,
+    fields: [
+      { key: 'frequency', label: 'Fréquence', type: 'select', options: ['Quotidien','Hebdomadaire','Mensuel','Custom (cron)'], default: 'Hebdomadaire' },
+      { key: 'time', label: 'Heure', type: 'time', default: '10:00' },
+      { key: 'cron', label: 'Expression cron', type: 'text', default: '0 10 * * 1', showIf: d => d.frequency === 'Custom (cron)' },
+    ],
+    preview: n => ({ 'Fréquence': n.data.frequency || 'Hebdomadaire', 'Heure': n.data.time || '10:00' })
+  },
+  trigger_webhook: {
+    category: 'trigger', cat: 'Déclencheur', icon: 'webhook',
+    name: 'Webhook entrant',
+    desc: 'URL d\'appel externe',
+    inputs: 0, outputs: 1,
+    fields: [
+      { key: 'path', label: 'Chemin URL', type: 'text', default: '/hook/nouveau-patient' },
+      { key: 'method', label: 'Méthode', type: 'select', options: ['POST','GET','PUT'], default: 'POST' },
+    ],
+    preview: n => ({ 'Méthode': n.data.method || 'POST', 'Chemin': n.data.path || '/hook' })
+  },
+
+  // ─── ACTIONS ───
+  action_send_email: {
+    category: 'action', cat: 'Action', icon: 'email',
+    name: 'Envoyer un email',
+    desc: 'Email transactionnel ou marketing',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'to', label: 'Destinataire', type: 'text', default: '{{patient.email}}' },
+      { key: 'from_name', label: 'Nom expéditeur', type: 'text', default: 'Cabinet OstéoCare' },
+      { key: 'subject', label: 'Objet', type: 'text', default: 'Votre rendez-vous chez OstéoCare' },
+      { key: 'body', label: 'Contenu', type: 'textarea', default: 'Bonjour {{patient.prenom}},\n\nMerci d\'avoir pris rendez-vous. À très vite.\n\nL\'équipe OstéoCare' },
+    ],
+    preview: n => ({ 'À': (n.data.to || '{{patient.email}}').replace(/^\{\{|\}\}$/g,''), 'Objet': trunc(n.data.subject, 22) })
+  },
+  action_send_sms: {
+    category: 'action', cat: 'Action', icon: 'sms',
+    name: 'Envoyer un SMS',
+    desc: 'SMS via passerelle',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'to', label: 'Destinataire', type: 'text', default: '{{patient.telephone}}' },
+      { key: 'message', label: 'Message', type: 'textarea', default: 'Bonjour {{patient.prenom}}, rappel : RDV demain à {{rdv.heure}} chez OstéoCare. Réponse STOP pour annuler.' },
+    ],
+    preview: n => ({ 'À': (n.data.to || '{{patient.telephone}}').replace(/^\{\{|\}\}$/g,''), 'Longueur': (n.data.message || '').length + ' car.' })
+  },
+  action_add_tag: {
+    category: 'action', cat: 'Action', icon: 'tag',
+    name: 'Ajouter un tag',
+    desc: 'Segmenter le patient dans le CRM',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'tag', label: 'Tag', type: 'text', default: 'campagne-fidelisation' },
+    ],
+    preview: n => ({ 'Tag': n.data.tag || '—' })
+  },
+  action_update_crm: {
+    category: 'action', cat: 'Action', icon: 'crm',
+    name: 'Mettre à jour CRM',
+    desc: 'Modifier la fiche patient',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'field', label: 'Champ', type: 'select', options: ['statut','dernière_visite','score_engagement','notes'], default: 'statut' },
+      { key: 'value', label: 'Valeur', type: 'text', default: 'actif' },
+    ],
+    preview: n => ({ 'Champ': n.data.field || 'statut', 'Valeur': trunc(n.data.value, 14) })
+  },
+  action_create_task: {
+    category: 'action', cat: 'Action', icon: 'task',
+    name: 'Créer une tâche',
+    desc: 'Pour l\'équipe du cabinet',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'assignee', label: 'Assignée à', type: 'select', options: ['Ostéopathe','Secrétariat','Auto'], default: 'Secrétariat' },
+      { key: 'title', label: 'Titre', type: 'text', default: 'Rappeler {{patient.prenom}} {{patient.nom}}' },
+      { key: 'priority', label: 'Priorité', type: 'select', options: ['Basse','Normale','Haute'], default: 'Normale' },
+    ],
+    preview: n => ({ 'Assignée': n.data.assignee || 'Secrétariat', 'Priorité': n.data.priority || 'Normale' })
+  },
+  action_ai_content: {
+    category: 'action', cat: 'Action IA', icon: 'ai',
+    name: 'Rédiger avec IA',
+    desc: 'Génère un contenu personnalisé',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'prompt', label: 'Instruction', type: 'textarea', default: 'Rédige un email chaleureux de suivi post-consultation pour {{patient.prenom}} après une séance pour {{rdv.motif}}. Ton bienveillant, 4 phrases max.' },
+      { key: 'output_var', label: 'Variable de sortie', type: 'text', default: 'ai.contenu' },
+    ],
+    preview: n => ({ 'Sortie': `{{${n.data.output_var || 'ai.contenu'}}}` })
+  },
+
+  // ─── LOGIC ───
+  logic_wait: {
+    category: 'logic', cat: 'Logique', icon: 'wait',
+    name: 'Attendre',
+    desc: 'Délai avant l\'étape suivante',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'amount', label: 'Durée', type: 'number', default: 1 },
+      { key: 'unit', label: 'Unité', type: 'select', options: ['Minutes','Heures','Jours','Semaines'], default: 'Jours' },
+    ],
+    preview: n => ({ 'Attente': `${n.data.amount || 1} ${(n.data.unit || 'Jours').toLowerCase()}` })
+  },
+  logic_condition: {
+    category: 'logic', cat: 'Logique', icon: 'branch',
+    name: 'Condition (Si/Sinon)',
+    desc: 'Branche en fonction d\'un critère',
+    inputs: 1, outputs: 2, branches: true,
+    fields: [
+      { key: 'field', label: 'Champ', type: 'select', options: ['patient.age','patient.statut','rdv.type','patient.tags','patient.dernière_visite','patient.score_engagement'], default: 'patient.age' },
+      { key: 'op', label: 'Opérateur', type: 'select', options: ['=','≠','>','<','contient','ne contient pas','est vide'], default: '>' },
+      { key: 'value', label: 'Valeur', type: 'text', default: '60' },
+    ],
+    preview: n => ({ 'Condition': `${short(n.data.field)} ${n.data.op || '>'} ${trunc(n.data.value, 8)}` })
+  },
+  logic_filter: {
+    category: 'logic', cat: 'Logique', icon: 'filter',
+    name: 'Filtrer',
+    desc: 'Laisse passer si condition vraie',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'field', label: 'Champ', type: 'text', default: 'patient.tags' },
+      { key: 'op', label: 'Opérateur', type: 'select', options: ['contient','ne contient pas','=','≠'], default: 'contient' },
+      { key: 'value', label: 'Valeur', type: 'text', default: 'newsletter' },
+    ],
+    preview: n => ({ 'Si': `${short(n.data.field)} ${n.data.op} ${trunc(n.data.value, 8)}` })
+  },
+  logic_split: {
+    category: 'logic', cat: 'Logique', icon: 'split',
+    name: 'Split A/B',
+    desc: 'Test A/B des variantes',
+    inputs: 1, outputs: 2, branches: true, branchLabels: ['A','B'],
+    fields: [
+      { key: 'ratio', label: 'Répartition A (%)', type: 'number', default: 50 },
+    ],
+    preview: n => ({ 'A/B': `${n.data.ratio || 50}% / ${100 - (n.data.ratio || 50)}%` })
+  },
+
+  // ─── INTEGRATIONS ───
+  integration_slack: {
+    category: 'integration', cat: 'Intégration', icon: 'slack',
+    name: 'Notification Slack',
+    desc: 'Message dans un canal',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'channel', label: 'Canal', type: 'text', default: '#cabinet' },
+      { key: 'message', label: 'Message', type: 'textarea', default: 'Nouveau patient : {{patient.prenom}} {{patient.nom}} (RDV le {{rdv.date}})' },
+    ],
+    preview: n => ({ 'Canal': n.data.channel || '#cabinet' })
+  },
+  integration_ads_audience: {
+    category: 'integration', cat: 'Intégration', icon: 'audience',
+    name: 'Audience publicitaire',
+    desc: 'Ajouter à une audience (Meta/Google)',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'platform', label: 'Plateforme', type: 'select', options: ['Meta Ads','Google Ads','LinkedIn Ads'], default: 'Meta Ads' },
+      { key: 'audience_name', label: 'Nom de l\'audience', type: 'text', default: 'Patients OstéoCare - Retargeting' },
+      { key: 'action', label: 'Action', type: 'select', options: ['Ajouter','Retirer'], default: 'Ajouter' },
+    ],
+    preview: n => ({ 'Plateforme': n.data.platform || 'Meta Ads', 'Action': n.data.action || 'Ajouter' })
+  },
+  integration_webhook: {
+    category: 'integration', cat: 'Intégration', icon: 'webhook_out',
+    name: 'Webhook sortant',
+    desc: 'Appel HTTP externe',
+    inputs: 1, outputs: 1,
+    fields: [
+      { key: 'url', label: 'URL', type: 'text', default: 'https://api.exemple.com/hook' },
+      { key: 'method', label: 'Méthode', type: 'select', options: ['POST','GET','PUT','DELETE'], default: 'POST' },
+      { key: 'body', label: 'Corps (JSON)', type: 'textarea', code: true, default: '{\n  "patient_id": "{{patient.id}}",\n  "event": "workflow.step"\n}' },
+    ],
+    preview: n => ({ 'Méthode': n.data.method || 'POST', 'URL': trunc(n.data.url, 22) })
+  },
+};
+
+const CATEGORIES = [
+  { key: 'trigger', label: 'Déclencheurs' },
+  { key: 'action', label: 'Actions' },
+  { key: 'logic', label: 'Logique' },
+  { key: 'integration', label: 'Intégrations' },
+];
+
+const MERGE_TAGS = [
+  '{{patient.prenom}}', '{{patient.nom}}', '{{patient.email}}', '{{patient.telephone}}',
+  '{{patient.age}}', '{{rdv.date}}', '{{rdv.heure}}', '{{rdv.motif}}',
+  '{{cabinet.nom}}', '{{cabinet.telephone}}', '{{lien.confirmation}}', '{{lien.annulation}}'
+];
+
+/* ============================================================
+   TEMPLATES (pre-built marketing workflows)
+============================================================ */
+const TEMPLATES = [
+  {
+    id: 'reminder',
+    name: 'Rappel de rendez-vous J-1',
+    desc: 'SMS 24h avant + email de confirmation lorsqu\'un RDV est réservé.',
+    tags: ['rappel', 'sms', 'email'],
+    build: () => [
+      { type: 'trigger_appointment_booked', x: 120, y: 200, data: { type: 'Tout type' } },
+      { type: 'action_send_email', x: 460, y: 80, data: {
+        subject: '✓ RDV confirmé le {{rdv.date}}',
+        body: 'Bonjour {{patient.prenom}},\n\nVotre rendez-vous du {{rdv.date}} à {{rdv.heure}} est confirmé.\n\nAdresse : {{cabinet.nom}}\nBesoin de modifier ? {{lien.annulation}}\n\nÀ bientôt.' } },
+      { type: 'logic_wait', x: 460, y: 320, data: { amount: 1, unit: 'Jours' } },
+      { type: 'action_send_sms', x: 800, y: 320, data: {
+        message: 'Bonjour {{patient.prenom}}, rappel : RDV demain à {{rdv.heure}} chez OstéoCare. STOP pour annuler.' } },
+    ],
+    connect: [ [0,0,1,0], [0,0,2,0], [2,0,3,0] ]
+  },
+  {
+    id: 'reactivation',
+    name: 'Réactivation patient inactif',
+    desc: 'Séquence en 3 étapes pour ramener un patient sans visite depuis 6 mois.',
+    tags: ['réactivation', 'nurturing', 'fidélisation'],
+    build: () => [
+      { type: 'trigger_schedule', x: 100, y: 220, data: { frequency: 'Hebdomadaire', time: '09:00' } },
+      { type: 'logic_condition', x: 420, y: 220, data: { field: 'patient.dernière_visite', op: '>', value: '180 jours' } },
+      { type: 'action_send_email', x: 780, y: 100, data: {
+        subject: 'Vous nous manquez, {{patient.prenom}}',
+        body: 'Bonjour {{patient.prenom}},\n\nCela fait un moment que nous ne nous sommes pas vus. Prenez soin de vous — nous serions ravis de vous accueillir à nouveau.\n\nPrenez RDV en un clic : {{lien.confirmation}}' } },
+      { type: 'logic_wait', x: 780, y: 320, data: { amount: 7, unit: 'Jours' } },
+      { type: 'action_send_sms', x: 1120, y: 320, data: {
+        message: 'Coucou {{patient.prenom}}, une petite offre de -15% pour votre retour chez OstéoCare ce mois-ci. Répondez OUI pour réserver.' } },
+      { type: 'action_add_tag', x: 780, y: 540, data: { tag: 'inactif-non-réactivé' } },
+    ],
+    connect: [ [0,0,1,0], [1,0,2,0], [2,0,3,0], [3,0,4,0], [1,1,5,0] ]
+  },
+  {
+    id: 'birthday',
+    name: 'Campagne anniversaire',
+    desc: 'Envoi automatique d\'un email personnalisé + création d\'une tâche.',
+    tags: ['anniversaire', 'fidélisation'],
+    build: () => [
+      { type: 'trigger_birthday', x: 120, y: 200, data: { send_time: '10:00' } },
+      { type: 'action_ai_content', x: 440, y: 200, data: {
+        prompt: 'Rédige un message d\'anniversaire chaleureux et personnel pour {{patient.prenom}}. 3 phrases, ton amical.',
+        output_var: 'ai.message' } },
+      { type: 'action_send_email', x: 780, y: 200, data: {
+        subject: 'Joyeux anniversaire {{patient.prenom}} 🎂',
+        body: '{{ai.message}}\n\nBonne santé et à bientôt au cabinet.\n\nL\'équipe OstéoCare.' } },
+      { type: 'action_add_tag', x: 1120, y: 200, data: { tag: 'campagne-anniv-envoyée' } },
+    ],
+    connect: [ [0,0,1,0], [1,0,2,0], [2,0,3,0] ]
+  },
+  {
+    id: 'noshow',
+    name: 'Récupération absence',
+    desc: 'Après un no-show : SMS immédiat + relance email + tâche secrétariat.',
+    tags: ['récupération', 'no-show'],
+    build: () => [
+      { type: 'trigger_no_show', x: 100, y: 220, data: {} },
+      { type: 'action_send_sms', x: 420, y: 100, data: {
+        message: 'Bonjour {{patient.prenom}}, nous vous avons attendu au cabinet. Souhaitez-vous reprogrammer ? {{lien.confirmation}}' } },
+      { type: 'logic_wait', x: 420, y: 320, data: { amount: 2, unit: 'Heures' } },
+      { type: 'logic_condition', x: 760, y: 320, data: { field: 'patient.statut', op: '=', value: 'non répondu' } },
+      { type: 'action_create_task', x: 1100, y: 200, data: { assignee: 'Secrétariat', title: 'Rappeler {{patient.prenom}} {{patient.nom}} — RDV manqué', priority: 'Haute' } },
+      { type: 'action_send_email', x: 1100, y: 440, data: {
+        subject: 'Reprogrammons ensemble',
+        body: 'Bonjour {{patient.prenom}}, nous vous proposons de choisir un nouveau créneau ici : {{lien.confirmation}}' } },
+    ],
+    connect: [ [0,0,1,0], [0,0,2,0], [2,0,3,0], [3,0,4,0], [3,1,5,0] ]
+  },
+  {
+    id: 'lead',
+    name: 'Nouveau lead formulaire',
+    desc: 'Notifie l\'équipe, ajoute à l\'audience retargeting, envoie un email de bienvenue.',
+    tags: ['acquisition', 'lead'],
+    build: () => [
+      { type: 'trigger_form_submit', x: 100, y: 220, data: { form_id: 'Contact général' } },
+      { type: 'integration_slack', x: 440, y: 80, data: { channel: '#nouveaux-leads', message: '🎉 Nouveau lead : {{patient.prenom}} {{patient.nom}} — {{patient.email}}' } },
+      { type: 'action_send_email', x: 440, y: 260, data: {
+        subject: 'Bienvenue chez OstéoCare',
+        body: 'Bonjour {{patient.prenom}},\n\nMerci de nous avoir contactés. Nous revenons vers vous sous 24h.\n\nEn attendant, découvrez nos techniques : https://osteocare.fr/techniques' } },
+      { type: 'integration_ads_audience', x: 440, y: 440, data: { platform: 'Meta Ads', audience_name: 'Leads récents 30j', action: 'Ajouter' } },
+      { type: 'action_add_tag', x: 780, y: 260, data: { tag: 'lead-nouveau' } },
+    ],
+    connect: [ [0,0,1,0], [0,0,2,0], [0,0,3,0], [2,0,4,0] ]
+  }
+];
+
+/* ============================================================
+   STATE
+============================================================ */
+const state = {
+  nodes: [],            // { id, type, x, y, data }
+  connections: [],      // { id, from: {node, port}, to: {node, port} }
+  selectedNode: null,
+  selectedConn: null,
+  zoom: 1,
+  panX: 40,
+  panY: 40,
+  connectionStart: null, // { nodeId, port, isBranch }
+  isPanning: false,
+  spaceDown: false,
+  running: false,
+};
+
+const STORAGE_KEY = 'osteocare_workflow';
+
+/* ============================================================
+   UTIL
+============================================================ */
+function uid() { return 'n' + Math.random().toString(36).slice(2, 9); }
+function trunc(s, n) { s = s || ''; return s.length > n ? s.slice(0, n) + '…' : s; }
+function short(f) { return (f || '').split('.').pop(); }
+function el(tag, attrs = {}, children = []) {
+  const e = document.createElementNS(attrs._svg ? 'http://www.w3.org/2000/svg' : 'http://www.w3.org/1999/xhtml', tag);
+  for (const k in attrs) {
+    if (k === '_svg') continue;
+    if (k === 'class') e.setAttribute('class', attrs[k]);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
+  }
+  (Array.isArray(children) ? children : [children]).forEach(c => {
+    if (c == null) return;
+    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+    else e.appendChild(c);
+  });
+  return e;
+}
+
+/* ============================================================
+   PALETTE RENDER
+============================================================ */
+function renderPalette(filter = '') {
+  const wrap = document.getElementById('palette-content');
+  wrap.innerHTML = '';
+  const f = filter.toLowerCase().trim();
+  for (const cat of CATEGORIES) {
+    const items = Object.entries(NODE_DEFS).filter(([id, def]) =>
+      def.category === cat.key &&
+      (!f || def.name.toLowerCase().includes(f) || def.desc.toLowerCase().includes(f))
+    );
+    if (!items.length) continue;
+    const title = document.createElement('div');
+    title.className = 'category-title';
+    title.textContent = cat.label;
+    wrap.appendChild(title);
+    for (const [id, def] of items) {
+      const n = document.createElement('div');
+      n.className = 'palette-node';
+      n.draggable = true;
+      n.dataset.type = id;
+      n.innerHTML = `
+        <div class="palette-icon ${def.category}">${ICONS[def.icon] || ''}</div>
+        <div class="palette-label">
+          <div class="palette-name">${def.name}</div>
+          <div class="palette-desc">${def.desc}</div>
+        </div>`;
+      n.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('nodeType', id);
+        e.dataTransfer.effectAllowed = 'copy';
+      });
+      wrap.appendChild(n);
+    }
+  }
+}
+
+function renderTemplatesList() {
+  const wrap = document.getElementById('templates-content');
+  wrap.innerHTML = '';
+  const title = document.createElement('div');
+  title.className = 'category-title';
+  title.textContent = 'Templates prêts à l\'emploi';
+  wrap.appendChild(title);
+  for (const t of TEMPLATES) {
+    const c = document.createElement('div');
+    c.className = 'template-card';
+    c.innerHTML = `
+      <h4>${t.name}</h4>
+      <p>${t.desc}</p>
+      <div class="template-tags">${t.tags.map(x => `<span class="template-tag">${x}</span>`).join('')}</div>`;
+    c.addEventListener('click', () => loadTemplate(t.id));
+    wrap.appendChild(c);
+  }
+}
+
+/* ============================================================
+   CANVAS TRANSFORM
+============================================================ */
+function applyTransform() {
+  const inner = document.getElementById('canvas-inner');
+  inner.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+  document.getElementById('zoom-level').textContent = Math.round(state.zoom * 100) + '%';
+}
+function screenToCanvas(sx, sy) {
+  const rect = document.getElementById('canvas').getBoundingClientRect();
+  return {
+    x: (sx - rect.left - state.panX) / state.zoom,
+    y: (sy - rect.top - state.panY) / state.zoom,
+  };
+}
+
+function setZoom(z, cx, cy) {
+  const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+  cx = cx == null ? canvasRect.width / 2 : cx;
+  cy = cy == null ? canvasRect.height / 2 : cy;
+  const before = screenToCanvas(cx + canvasRect.left, cy + canvasRect.top);
+  state.zoom = Math.max(0.25, Math.min(2, z));
+  const after = screenToCanvas(cx + canvasRect.left, cy + canvasRect.top);
+  state.panX += (after.x - before.x) * state.zoom;
+  state.panY += (after.y - before.y) * state.zoom;
+  applyTransform();
+}
+
+/* ============================================================
+   NODES RENDER
+============================================================ */
+function renderAllNodes() {
+  const layer = document.getElementById('nodes-layer');
+  layer.innerHTML = '';
+  for (const n of state.nodes) renderNode(n);
+  renderConnections();
+  document.getElementById('canvas-empty').style.display = state.nodes.length ? 'none' : 'flex';
+}
+
+function renderNode(n) {
+  const def = NODE_DEFS[n.type];
+  if (!def) return;
+  const layer = document.getElementById('nodes-layer');
+  const existing = document.getElementById('node-' + n.id);
+  if (existing) existing.remove();
+
+  const wrap = document.createElement('div');
+  wrap.className = 'node' + (state.selectedNode === n.id ? ' selected' : '');
+  wrap.id = 'node-' + n.id;
+  wrap.style.left = n.x + 'px';
+  wrap.style.top = n.y + 'px';
+
+  const preview = def.preview ? def.preview(n) : {};
+  let bodyHtml = '';
+  const entries = Object.entries(preview);
+  if (entries.length === 0) {
+    bodyHtml = `<div class="node-body-empty">Cliquez pour configurer</div>`;
+  } else {
+    bodyHtml = entries.map(([k, v]) => `<div class="node-body-line"><span>${k}</span><span>${escapeHtml(String(v))}</span></div>`).join('');
+  }
+
+  let portsHtml = '';
+  if (def.inputs > 0) {
+    portsHtml += `<div class="port in" data-node="${n.id}" data-port="in"></div>`;
+  }
+  if (def.branches) {
+    const labels = def.branchLabels || ['Oui','Non'];
+    portsHtml += `
+      <div class="port out branch-true" data-node="${n.id}" data-port="0" style="top:38%"></div>
+      <div class="port-label" style="top:calc(38% - 4px);right:16px;color:var(--success)">${labels[0]}</div>
+      <div class="port out branch-false" data-node="${n.id}" data-port="1" style="top:72%"></div>
+      <div class="port-label" style="top:calc(72% - 4px);right:16px;color:var(--danger)">${labels[1]}</div>`;
+  } else if (def.outputs > 0) {
+    portsHtml += `<div class="port out" data-node="${n.id}" data-port="0"></div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="node-header">
+      <div class="node-icon ${def.category}">${ICONS[def.icon] || ''}</div>
+      <div class="node-title">
+        <div class="node-name">${escapeHtml(def.name)}</div>
+        <div class="node-type">${def.cat}</div>
+      </div>
+    </div>
+    <div class="node-body">${bodyHtml}</div>
+    ${portsHtml}
+    <div class="node-delete" title="Supprimer (Suppr)">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+    </div>`;
+  layer.appendChild(wrap);
+
+  // Wire up
+  wrap.addEventListener('mousedown', e => startDragNode(e, n.id));
+  wrap.addEventListener('click', e => {
+    if (e.target.classList.contains('port')) return;
+    if (e.target.closest('.node-delete')) return;
+    selectNode(n.id);
+    e.stopPropagation();
+  });
+  wrap.querySelector('.node-delete').addEventListener('click', e => {
+    e.stopPropagation();
+    deleteNode(n.id);
+  });
+  wrap.querySelectorAll('.port').forEach(p => {
+    p.addEventListener('mousedown', e => startConnection(e, p));
+    p.addEventListener('mouseup', e => finishConnection(e, p));
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+/* ============================================================
+   NODE DRAG (move on canvas)
+============================================================ */
+let dragCtx = null;
+function startDragNode(e, id) {
+  if (e.button !== 0) return;
+  if (e.target.classList.contains('port')) return;
+  if (state.spaceDown) return;
+  const n = state.nodes.find(x => x.id === id);
+  if (!n) return;
+  const start = screenToCanvas(e.clientX, e.clientY);
+  dragCtx = { id, offsetX: start.x - n.x, offsetY: start.y - n.y };
+  document.getElementById('node-' + id).classList.add('dragging');
+  e.preventDefault();
+}
+window.addEventListener('mousemove', e => {
+  if (!dragCtx) return;
+  const p = screenToCanvas(e.clientX, e.clientY);
+  const n = state.nodes.find(x => x.id === dragCtx.id);
+  if (!n) return;
+  n.x = Math.round((p.x - dragCtx.offsetX) / 10) * 10;
+  n.y = Math.round((p.y - dragCtx.offsetY) / 10) * 10;
+  const el = document.getElementById('node-' + n.id);
+  el.style.left = n.x + 'px';
+  el.style.top = n.y + 'px';
+  renderConnections();
+});
+window.addEventListener('mouseup', () => {
+  if (dragCtx) {
+    document.getElementById('node-' + dragCtx.id)?.classList.remove('dragging');
+  }
+  dragCtx = null;
+});
+
+/* ============================================================
+   CONNECTIONS
+============================================================ */
+function nodePortPos(nodeId, side, portIdx = 0) {
+  const n = state.nodes.find(x => x.id === nodeId);
+  const def = NODE_DEFS[n.type];
+  const NW = 240, NH = 108; // approx height; measure when possible
+  const nodeEl = document.getElementById('node-' + nodeId);
+  const h = nodeEl ? nodeEl.offsetHeight : NH;
+  if (side === 'in') return { x: n.x, y: n.y + h / 2 };
+  if (def.branches) {
+    const y = portIdx === 0 ? n.y + h * 0.38 : n.y + h * 0.72;
+    return { x: n.x + NW, y };
+  }
+  return { x: n.x + NW, y: n.y + h / 2 };
+}
+
+function bezierPath(x1, y1, x2, y2) {
+  const dx = Math.max(60, Math.abs(x2 - x1) * 0.45);
+  return `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+}
+
+function renderConnections() {
+  const layer = document.getElementById('connections-layer');
+  layer.innerHTML = '';
+  for (const c of state.connections) {
+    const from = nodePortPos(c.from.node, 'out', c.from.port);
+    const to = nodePortPos(c.to.node, 'in', 0);
+    const d = bezierPath(from.x, from.y, to.x, to.y);
+
+    const hit = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    hit.setAttribute('class', 'conn-hit');
+    hit.setAttribute('d', d);
+    hit.addEventListener('click', () => selectConnection(c.id));
+    layer.appendChild(hit);
+
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('class', 'conn' + (state.selectedConn === c.id ? ' selected' : ''));
+    p.setAttribute('d', d);
+    p.setAttribute('marker-end', 'url(#arrow)');
+    p.addEventListener('click', () => selectConnection(c.id));
+    layer.appendChild(p);
+  }
+}
+
+let connCtx = null;
+function startConnection(e, portEl) {
+  const nodeId = portEl.dataset.node;
+  const portType = portEl.dataset.port;
+  if (portType === 'in') return; // Only start from output
+  const portIdx = parseInt(portType, 10) || 0;
+  connCtx = { nodeId, portIdx };
+  portEl.classList.add('connecting');
+  document.getElementById('canvas').style.cursor = 'crosshair';
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function drawGhost(fromX, fromY, toX, toY) {
+  const layer = document.getElementById('ghost-layer');
+  layer.innerHTML = '';
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('class', 'ghost');
+  p.setAttribute('d', bezierPath(fromX, fromY, toX, toY));
+  layer.appendChild(p);
+}
+
+window.addEventListener('mousemove', e => {
+  if (!connCtx) return;
+  const from = nodePortPos(connCtx.nodeId, 'out', connCtx.portIdx);
+  const c = screenToCanvas(e.clientX, e.clientY);
+  drawGhost(from.x, from.y, c.x, c.y);
+});
+
+function finishConnection(e, portEl) {
+  if (!connCtx) return;
+  const nodeId = portEl.dataset.node;
+  const portType = portEl.dataset.port;
+  if (portType !== 'in') return;
+  if (nodeId === connCtx.nodeId) return;
+  // Prevent duplicates
+  const exists = state.connections.some(c =>
+    c.from.node === connCtx.nodeId && c.from.port === connCtx.portIdx &&
+    c.to.node === nodeId);
+  if (!exists) {
+    state.connections.push({
+      id: uid(),
+      from: { node: connCtx.nodeId, port: connCtx.portIdx },
+      to: { node: nodeId, port: 0 }
+    });
+    renderConnections();
+  }
+  cleanupConnection();
+  e.stopPropagation();
+}
+
+function cleanupConnection() {
+  document.querySelectorAll('.port.connecting').forEach(p => p.classList.remove('connecting'));
+  connCtx = null;
+  document.getElementById('ghost-layer').innerHTML = '';
+  document.getElementById('canvas').style.cursor = '';
+}
+
+window.addEventListener('mouseup', e => {
+  if (connCtx && !e.target.classList.contains('port')) {
+    cleanupConnection();
+  }
+});
+
+/* ============================================================
+   SELECTION + DELETE
+============================================================ */
+function selectNode(id) {
+  state.selectedNode = id;
+  state.selectedConn = null;
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+  const nodeEl = document.getElementById('node-' + id);
+  if (nodeEl) nodeEl.classList.add('selected');
+  renderConnections();
+  renderInspector();
+}
+function selectConnection(id) {
+  state.selectedConn = id;
+  state.selectedNode = null;
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+  renderConnections();
+  renderInspector();
+}
+function deselectAll() {
+  state.selectedNode = null;
+  state.selectedConn = null;
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+  renderConnections();
+  renderInspector();
+}
+
+function deleteNode(id) {
+  state.nodes = state.nodes.filter(n => n.id !== id);
+  state.connections = state.connections.filter(c => c.from.node !== id && c.to.node !== id);
+  state.selectedNode = null;
+  renderAllNodes();
+  renderInspector();
+}
+function deleteConnection(id) {
+  state.connections = state.connections.filter(c => c.id !== id);
+  state.selectedConn = null;
+  renderConnections();
+  renderInspector();
+}
+
+/* ============================================================
+   INSPECTOR
+============================================================ */
+function renderInspector() {
+  const empty = document.getElementById('inspector-empty');
+  const content = document.getElementById('inspector-content');
+  const body = document.getElementById('inspector-body');
+
+  if (state.selectedConn) {
+    empty.style.display = 'none';
+    content.style.display = 'flex';
+    document.getElementById('inspector-icon').innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+    document.getElementById('inspector-icon').style.background = 'var(--text-dim)';
+    document.getElementById('inspector-name').textContent = 'Connexion';
+    document.getElementById('inspector-cat').textContent = 'Lien';
+    body.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.className = 'btn danger';
+    btn.style.width = '100%';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg> Supprimer cette connexion';
+    btn.addEventListener('click', () => deleteConnection(state.selectedConn));
+    body.appendChild(btn);
+    return;
+  }
+
+  if (!state.selectedNode) {
+    empty.style.display = 'block';
+    content.style.display = 'none';
+    return;
+  }
+  const n = state.nodes.find(x => x.id === state.selectedNode);
+  if (!n) { empty.style.display = 'block'; content.style.display = 'none'; return; }
+  const def = NODE_DEFS[n.type];
+  empty.style.display = 'none';
+  content.style.display = 'flex';
+
+  const iconEl = document.getElementById('inspector-icon');
+  iconEl.innerHTML = ICONS[def.icon] || '';
+  iconEl.style.background = getComputedStyle(document.documentElement).getPropertyValue(`--node-${def.category}`).trim();
+  document.getElementById('inspector-name').textContent = def.name;
+  document.getElementById('inspector-cat').textContent = def.cat + ' · ' + def.desc;
+
+  body.innerHTML = '';
+  if (!def.fields || !def.fields.length) {
+    const info = document.createElement('div');
+    info.style.cssText = 'padding:20px; text-align:center; color:var(--text-faint); font-size:.85rem;';
+    info.textContent = 'Ce nœud ne nécessite aucune configuration.';
+    body.appendChild(info);
+  }
+
+  for (const f of def.fields || []) {
+    if (f.showIf && !f.showIf(n.data)) continue;
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+    const label = document.createElement('label');
+    label.textContent = f.label;
+    wrap.appendChild(label);
+
+    let input;
+    if (f.type === 'select') {
+      input = document.createElement('select');
+      f.options.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o; opt.textContent = o;
+        if ((n.data[f.key] ?? f.default) === o) opt.selected = true;
+        input.appendChild(opt);
+      });
+    } else if (f.type === 'textarea') {
+      input = document.createElement('textarea');
+      if (f.code) input.classList.add('code');
+      input.value = n.data[f.key] ?? f.default ?? '';
+    } else {
+      input = document.createElement('input');
+      input.type = f.type === 'number' ? 'number' : (f.type === 'time' ? 'time' : 'text');
+      input.value = n.data[f.key] ?? f.default ?? '';
+    }
+    input.addEventListener('input', () => {
+      n.data[f.key] = input.value;
+      renderNode(n);
+      if (state.selectedNode === n.id) document.getElementById('node-' + n.id).classList.add('selected');
+      // re-render inspector if fields have showIf conditions
+      if ((def.fields || []).some(x => x.showIf)) renderInspector();
+    });
+    wrap.appendChild(input);
+    body.appendChild(wrap);
+  }
+
+  // Merge tags for text-heavy nodes
+  if ((def.fields || []).some(f => f.type === 'textarea' || f.type === 'text')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'merge-tags-wrap';
+    wrap.innerHTML = `<div class="merge-tags-title">💡 Variables disponibles (cliquez pour copier)</div>`;
+    for (const tag of MERGE_TAGS) {
+      const t = document.createElement('span');
+      t.className = 'merge-tag';
+      t.textContent = tag;
+      t.addEventListener('click', () => {
+        navigator.clipboard.writeText(tag).then(() => showToast(`Copié : ${tag}`));
+      });
+      wrap.appendChild(t);
+    }
+    body.appendChild(wrap);
+  }
+
+  // Delete button
+  const del = document.createElement('button');
+  del.className = 'btn danger';
+  del.style.cssText = 'width:100%; margin-top:10px;';
+  del.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg> Supprimer le nœud';
+  del.addEventListener('click', () => deleteNode(n.id));
+  body.appendChild(del);
+}
+
+/* ============================================================
+   CANVAS EVENTS
+============================================================ */
+const canvas = document.getElementById('canvas');
+
+// Drag from palette → drop on canvas
+canvas.addEventListener('dragover', e => e.preventDefault());
+canvas.addEventListener('drop', e => {
+  const type = e.dataTransfer.getData('nodeType');
+  if (!type || !NODE_DEFS[type]) return;
+  const p = screenToCanvas(e.clientX, e.clientY);
+  addNode(type, p.x - 120, p.y - 40);
+});
+
+// Pan
+let panCtx = null;
+canvas.addEventListener('mousedown', e => {
+  if (e.target === canvas || e.target.classList.contains('canvas-inner') ||
+      e.target === document.getElementById('canvas-svg') ||
+      e.target === document.getElementById('nodes-layer') ||
+      state.spaceDown) {
+    if (e.target.classList.contains('port')) return;
+    panCtx = { x: e.clientX, y: e.clientY, startX: state.panX, startY: state.panY };
+    canvas.classList.add('panning');
+    if (e.target === canvas || e.target.classList.contains('canvas-inner')) {
+      if (!e.target.classList.contains('port')) deselectAll();
+    }
+  }
+});
+window.addEventListener('mousemove', e => {
+  if (!panCtx) return;
+  state.panX = panCtx.startX + (e.clientX - panCtx.x);
+  state.panY = panCtx.startY + (e.clientY - panCtx.y);
+  applyTransform();
+});
+window.addEventListener('mouseup', () => {
+  if (panCtx) { canvas.classList.remove('panning'); panCtx = null; }
+});
+
+// Zoom on wheel
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const cx = e.clientX - rect.left;
+  const cy = e.clientY - rect.top;
+  const dz = e.deltaY < 0 ? 1.1 : 0.9;
+  setZoom(state.zoom * dz, cx, cy);
+}, { passive: false });
+
+// Keyboard
+window.addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea, select')) return;
+  if (e.code === 'Space') { state.spaceDown = true; canvas.style.cursor = 'grab'; e.preventDefault(); }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (state.selectedNode) { deleteNode(state.selectedNode); e.preventDefault(); }
+    else if (state.selectedConn) { deleteConnection(state.selectedConn); e.preventDefault(); }
+  }
+  if (e.key === 'Escape') deselectAll();
+});
+window.addEventListener('keyup', e => {
+  if (e.code === 'Space') { state.spaceDown = false; canvas.style.cursor = ''; }
+});
+
+/* ============================================================
+   NODE OPS
+============================================================ */
+function addNode(type, x, y, data = null) {
+  const def = NODE_DEFS[type];
+  if (!def) return;
+  const defaults = {};
+  (def.fields || []).forEach(f => defaults[f.key] = f.default);
+  const n = {
+    id: uid(),
+    type,
+    x: Math.round(x / 10) * 10,
+    y: Math.round(y / 10) * 10,
+    data: data ? { ...defaults, ...data } : defaults
+  };
+  state.nodes.push(n);
+  renderAllNodes();
+  selectNode(n.id);
+  return n;
+}
+
+/* ============================================================
+   TEMPLATES LOAD
+============================================================ */
+function loadTemplate(id) {
+  const t = TEMPLATES.find(x => x.id === id);
+  if (!t) return;
+  state.nodes = [];
+  state.connections = [];
+  const built = t.build();
+  const created = [];
+  built.forEach(spec => {
+    const n = addNode(spec.type, spec.x, spec.y, spec.data);
+    created.push(n);
+  });
+  (t.connect || []).forEach(([fi, fp, ti, tp]) => {
+    if (!created[fi] || !created[ti]) return;
+    state.connections.push({
+      id: uid(),
+      from: { node: created[fi].id, port: fp },
+      to: { node: created[ti].id, port: tp }
+    });
+  });
+  document.getElementById('workflow-name').value = t.name;
+  deselectAll();
+  renderAllNodes();
+  fitView();
+  showToast(`Template chargé : ${t.name}`);
+}
+
+/* ============================================================
+   SAVE / LOAD
+============================================================ */
+function saveWorkflow() {
+  const payload = {
+    name: document.getElementById('workflow-name').value,
+    nodes: state.nodes,
+    connections: state.connections,
+    savedAt: new Date().toISOString(),
+  };
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    showToast('Workflow sauvegardé ✓');
+  } catch(e) {
+    showToast('Erreur de sauvegarde', true);
+  }
+}
+function loadWorkflow() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    state.nodes = p.nodes || [];
+    state.connections = p.connections || [];
+    document.getElementById('workflow-name').value = p.name || 'Workflow';
+    renderAllNodes();
+    return true;
+  } catch(e) { return false; }
+}
+
+function clearWorkflow() {
+  if (state.nodes.length === 0) return;
+  if (!confirm('Vider entièrement la toile ?')) return;
+  state.nodes = [];
+  state.connections = [];
+  deselectAll();
+  renderAllNodes();
+  showToast('Toile vidée');
+}
+
+/* ============================================================
+   FIT VIEW
+============================================================ */
+function fitView() {
+  if (state.nodes.length === 0) {
+    state.panX = 40; state.panY = 40; state.zoom = 1;
+    applyTransform();
+    return;
+  }
+  const minX = Math.min(...state.nodes.map(n => n.x));
+  const minY = Math.min(...state.nodes.map(n => n.y));
+  const maxX = Math.max(...state.nodes.map(n => n.x + 240));
+  const maxY = Math.max(...state.nodes.map(n => n.y + 140));
+  const wrap = document.querySelector('.canvas-wrap').getBoundingClientRect();
+  const zoom = Math.min(1, Math.min((wrap.width - 80) / (maxX - minX), (wrap.height - 80) / (maxY - minY)));
+  state.zoom = Math.max(0.4, Math.min(1, zoom));
+  state.panX = (wrap.width - (maxX - minX) * state.zoom) / 2 - minX * state.zoom;
+  state.panY = (wrap.height - (maxY - minY) * state.zoom) / 2 - minY * state.zoom;
+  applyTransform();
+}
+
+/* ============================================================
+   EXECUTION (simulated)
+============================================================ */
+async function runWorkflow() {
+  if (state.running) return;
+  const triggers = state.nodes.filter(n => NODE_DEFS[n.type].category === 'trigger');
+  if (!triggers.length) { showToast('Ajoute un déclencheur pour exécuter', true); return; }
+
+  state.running = true;
+  const btn = document.getElementById('btn-run');
+  btn.disabled = true;
+  document.getElementById('status-pill').textContent = 'En cours…';
+  document.getElementById('status-pill').classList.add('active');
+  document.getElementById('log-panel').classList.add('open');
+  document.getElementById('log-body').innerHTML = '';
+
+  logLine('info', 'Démarrage du workflow');
+
+  // Reset visuals
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('running','completed'));
+
+  for (const trig of triggers) {
+    await walk(trig.id, 0);
+  }
+
+  logLine('success', 'Workflow terminé');
+  document.getElementById('status-pill').textContent = 'Terminé';
+  setTimeout(() => {
+    document.getElementById('status-pill').textContent = 'Inactif';
+    document.getElementById('status-pill').classList.remove('active');
+  }, 3000);
+  state.running = false;
+  btn.disabled = false;
+}
+
+async function walk(nodeId, branchIdx) {
+  const n = state.nodes.find(x => x.id === nodeId);
+  if (!n) return;
+  const def = NODE_DEFS[n.type];
+  const nodeEl = document.getElementById('node-' + nodeId);
+  nodeEl?.classList.add('running');
+  logLine('info', `${def.name} — exécution…`);
+  await sleep(700);
+  nodeEl?.classList.remove('running');
+  nodeEl?.classList.add('completed');
+  logLine('success', `${def.name} — ${describeAction(n)}`);
+
+  const nextPort = def.branches ? branchIdx : 0;
+  const nextConns = state.connections.filter(c => c.from.node === nodeId);
+
+  if (def.branches) {
+    // decide which branch(es) to take
+    const takeBranch = decideBranch(n);
+    for (const c of nextConns) {
+      if (c.from.port === takeBranch) {
+        await walk(c.to.node, 0);
+      }
+    }
+  } else {
+    for (const c of nextConns) {
+      await walk(c.to.node, 0);
+    }
+  }
+}
+
+function decideBranch(n) {
+  if (n.type === 'logic_split') {
+    const r = (n.data.ratio ?? 50) / 100;
+    return Math.random() < r ? 0 : 1;
+  }
+  // random 70/30 for condition demo
+  return Math.random() < 0.7 ? 0 : 1;
+}
+
+function describeAction(n) {
+  const d = n.data;
+  switch (n.type) {
+    case 'action_send_email': return `Email envoyé à ${d.to} ("${trunc(d.subject, 30)}")`;
+    case 'action_send_sms': return `SMS envoyé à ${d.to}`;
+    case 'action_add_tag': return `Tag ajouté : ${d.tag}`;
+    case 'action_update_crm': return `CRM mis à jour (${d.field} = ${d.value})`;
+    case 'action_create_task': return `Tâche créée pour ${d.assignee}`;
+    case 'action_ai_content': return `Contenu IA généré → ${d.output_var}`;
+    case 'logic_wait': return `Attente ${d.amount} ${d.unit} (simulée)`;
+    case 'logic_condition': return `Condition ${d.field} ${d.op} ${d.value}`;
+    case 'logic_filter': return `Filtre ${d.field} ${d.op} ${d.value}`;
+    case 'logic_split': return `A/B split ${d.ratio}%/${100 - d.ratio}%`;
+    case 'integration_slack': return `Slack ${d.channel}`;
+    case 'integration_ads_audience': return `${d.action} → ${d.platform} (${d.audience_name})`;
+    case 'integration_webhook': return `${d.method} ${d.url}`;
+    default: return 'OK';
+  }
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function logLine(level, text) {
+  const body = document.getElementById('log-body');
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  const now = new Date();
+  const t = now.toTimeString().slice(0, 8);
+  const icons = {
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  };
+  line.innerHTML = `<span class="log-time">${t}</span>
+    <span class="log-icon ${level}">${icons[level] || icons.info}</span>
+    <span class="log-text">${escapeHtml(text)}</span>`;
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+}
+
+/* ============================================================
+   TOAST
+============================================================ */
+let toastTimer;
+function showToast(text, isError = false) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = text;
+  t.classList.toggle('error', isError);
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ============================================================
+   MODAL (templates gallery)
+============================================================ */
+function openModal(title, html) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+/* ============================================================
+   WIRING TOOLBAR
+============================================================ */
+document.getElementById('btn-save').addEventListener('click', saveWorkflow);
+document.getElementById('btn-run').addEventListener('click', runWorkflow);
+document.getElementById('btn-clear').addEventListener('click', clearWorkflow);
+document.getElementById('btn-templates').addEventListener('click', () => {
+  document.querySelector('.sidebar-tab[data-tab="templates"]').click();
+});
+document.getElementById('btn-zoom-in').addEventListener('click', () => setZoom(state.zoom * 1.15));
+document.getElementById('btn-zoom-out').addEventListener('click', () => setZoom(state.zoom / 1.15));
+document.getElementById('btn-fit').addEventListener('click', fitView);
+document.getElementById('btn-reset').addEventListener('click', () => {
+  state.panX = 40; state.panY = 40; state.zoom = 1; applyTransform();
+});
+document.getElementById('log-close').addEventListener('click', () => {
+  document.getElementById('log-panel').classList.remove('open');
+});
+
+/* Sidebar tabs */
+document.querySelectorAll('.sidebar-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const t = tab.dataset.tab;
+    document.getElementById('palette-content').style.display = t === 'nodes' ? 'block' : 'none';
+    document.getElementById('templates-content').style.display = t === 'templates' ? 'block' : 'none';
+    document.getElementById('search-wrap').style.display = t === 'nodes' ? 'block' : 'none';
+  });
+});
+document.getElementById('palette-search').addEventListener('input', e => renderPalette(e.target.value));
+
+/* ============================================================
+   INIT
+============================================================ */
+renderPalette();
+renderTemplatesList();
+applyTransform();
+if (!loadWorkflow()) {
+  loadTemplate('reminder');
+}
+</script>
+</body>
+</html>
