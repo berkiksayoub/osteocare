@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #1a3a5c;
+  --accent-foreground: #ffffff;
+  --background: #ffffff;
+  --foreground: #0f0f0f;
+  --muted: #f5f5f4;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #1a3a5c;
+  --card: #ffffff;
+  --card-foreground: #0f0f0f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-fraunces);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+/* Prose for MDX */
+.prose {
+  max-width: 72ch;
+  color: var(--foreground);
+  line-height: 1.75;
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  color: var(--foreground);
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+.prose h1 { font-size: 2.25rem; }
+.prose h2 { font-size: 1.75rem; }
+.prose h3 { font-size: 1.375rem; }
+.prose p { margin-bottom: 1.25em; }
+.prose ul, .prose ol { margin: 1em 0; padding-left: 1.5em; }
+.prose li { margin-bottom: 0.5em; }
+.prose blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 1.25em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+.prose strong { font-weight: 600; }
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose code {
+  background: var(--muted);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
